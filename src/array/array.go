@@ -39,4 +39,27 @@ func main() {
 		fmt.Print(k2[i], "/")
 		fmt.Print(string(k2[i]), ", ")
 	}
+
+	fmt.Println()
+
+	arr := [5]int{1, 2, 3, 4, 5}
+	clone := [5]int{}
+	rev_arr := [5]int{}
+
+	for i := 0; i < len(arr); i++ {
+		clone[i] = arr[i]
+		rev_arr[i] = arr[len(arr)-1-i]
+	}
+
+	for i := 0; i < len(arr)/2; i++ {
+		/* temp := arr[i]
+		arr[i] = arr[len(arr)-1-i]
+		arr[len(arr)-1-i] = temp */
+		arr[i], arr[len(arr)-1-i] = arr[len(arr)-1-i], arr[i]
+	}
+
+	fmt.Println(clone)
+	fmt.Println(rev_arr)
+	fmt.Println(arr)
+
 }
