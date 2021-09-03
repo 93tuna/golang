@@ -4,75 +4,71 @@ import "fmt"
 
 type Node struct {
 	next *Node
-	prev *Node
 	val  int
 }
 
-type LinkedList struct {
-	root *Node
-	tail *Node
-}
+func main() {
+	var root *Node
+	var tail *Node
 
-func (l *LinkedList) AddNode(val int) {
-	if l.root == nil {
-		l.root = &Node{val: val}
-		l.tail = l.root
-		return
-	}
-	l.tail.next = &Node{val: val}
-	prev := l.tail
-	l.tail = l.tail.next
-	l.tail.prev = prev
-}
+	root = &Node{val: 0}
+	tail = root
 
-func (l *LinkedList) RemoveNode(node *Node) {
-	if node == l.root {
-		l.root = l.root.next
-		l.root.prev = nil
-		node.next = nil
-		return
+	for i := 1; i < 10; i++ {
+		tail = AddNode(tail, i)
 	}
 
-	prev := node.prev
+	PrintNodes(root)
 
-	if node == l.tail {
+	root, tail = RemoveNode(root.next, root, tail)
+
+	PrintNodes(root)
+
+	root, tail = RemoveNode(root, root, tail)
+
+	PrintNodes(root)
+
+	root, tail = RemoveNode(tail, root, tail)
+
+	PrintNodes(root)
+	fmt.Printf("tail:%d\n", tail.val)
+}
+
+func AddNode(tail *Node, val int) *Node {
+	node := &Node{val: val}
+	tail.next = node
+	return node
+}
+
+func RemoveNode(node *Node, root *Node, tail *Node) (*Node, *Node) {
+	if node == root {
+		root = root.next
+		if root == nil {
+			tail = nil
+		}
+		return root, tail
+	}
+
+	prev := root
+	for prev.next != node {
+		prev = prev.next
+	}
+
+	if node == tail {
 		prev.next = nil
-		l.tail.prev = nil
-		l.tail = prev
+		tail = prev
 	} else {
 		prev.next = prev.next.next
 	}
+
+	return root, tail
 }
 
-func (l *LinkedList) PrintNodes() {
-	node := l.root
+func PrintNodes(root *Node) {
+	node := root
 	for node.next != nil {
 		fmt.Printf("%d -> ", node.val)
 		node = node.next
 	}
 	fmt.Printf("%d\n", node.val)
-}
-
-func main() {
-	list := &LinkedList{}
-	list.AddNode(0)
-
-	for i := 1; i < 10; i++ {
-		list.AddNode(i)
-	}
-
-	list.PrintNodes()
-
-	list.RemoveNode(list.root.next)
-
-	list.PrintNodes()
-
-	list.RemoveNode(list.root)
-
-	list.PrintNodes()
-
-	list.RemoveNode(list.tail)
-
-	list.PrintNodes()
-	fmt.Printf("tail:%d\n", list.tail.val)
 }
